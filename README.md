@@ -24,6 +24,10 @@ see https://github.com/openssl/openssl
 
 see https://github.com/intel/linux-sgx
 
+- Intel SGX SSL
+
+see https://github.com/intel/intel-sgx-ssl
+
 ### Compile and Run the Code
 
 The code is compiled and run in SGX Simulation mode by default: 
