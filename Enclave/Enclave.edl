@@ -44,6 +44,8 @@ include "../App/App.h"
     
     trusted {
         public void read_buffer_inEncalve([user_check] Ring_Queue_RX *ring_queue, [user_check] Ring_Queue_TX *ring_queue_tx);
+        public void pass_key([user_check] unsigned char *key, [user_check] unsigned char *iv, [user_check] unsigned char *aad);
+        public void generate_key();
     };
 
     /* 

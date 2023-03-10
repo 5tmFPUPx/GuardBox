@@ -42,6 +42,7 @@
 #include <openssl/bio.h>
 #include <openssl/evp.h>
 #include <openssl/crypto.h>
+#include <openssl/rand.h>
 #include <cstdio>
 
 /* 
@@ -58,15 +59,15 @@ void printf(const char *fmt, ...)
     ocall_print_string(buf);
 }
 
-static const unsigned char gcm_key[] = {
+unsigned char gcm_key[] = {
     0xee, 0xbc, 0x1f, 0x57, 0x48, 0x7f, 0x51, 0x92, 0x1c, 0x04, 0x65, 0x66,
     0x5f, 0x8a, 0xe6, 0xd1, 0x65, 0x8b, 0xb2, 0x6d, 0xe6, 0xf8, 0xa0, 0x69,
     0xa3, 0x52, 0x02, 0x93, 0xa5, 0x72, 0x07, 0x8f};
 
-static const unsigned char gcm_iv[] = {
+unsigned char gcm_iv[] = {
     0x99, 0xaa, 0x3e, 0x68, 0xed, 0x81, 0x73, 0xa0, 0xee, 0xd0, 0x66, 0x84};
 
-static const unsigned char gcm_aad[] = {
+unsigned char gcm_aad[] = {
     0x4d, 0x23, 0xc3, 0xce, 0xc3, 0x34, 0xb4, 0x9b, 0xdb, 0x37, 0x0c, 0x43,
     0x7f, 0xec, 0x78, 0xde};
 
@@ -138,4 +139,23 @@ void read_buffer_inEncalve(Ring_Queue_RX *ring_queue_rx, Ring_Queue_TX *ring_que
         RX_Read(ring_queue_rx);
         RX_Read_Over(ring_queue_rx, ring_queue_tx);
     }
+}
+
+void generate_key()
+{
+    RAND_bytes(gcm_key, sizeof(gcm_key));
+    RAND_bytes(gcm_iv, sizeof(gcm_iv));
+    RAND_bytes(gcm_aad, sizeof(gcm_aad));
+}
+
+/*
+The pass_key is just for demonstration.
+The key is sent outside the enclave for decryption outside the enclave. 
+Encryption/Decryption is performed within the enclave in practice.
+*/
+void pass_key(unsigned char *out_enclave_key, unsigned char *out_enclave_iv, unsigned char *out_enclave_aad)
+{
+    memcpy(out_enclave_key, gcm_key, sizeof(gcm_key));
+    memcpy(out_enclave_iv, gcm_iv, sizeof(gcm_iv));
+    memcpy(out_enclave_aad, gcm_aad, sizeof(gcm_aad));
 }

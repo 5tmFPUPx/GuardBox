@@ -42,6 +42,8 @@ extern "C" {
 #endif
 
 void read_buffer_inEncalve(Ring_Queue_RX *ring_queue, Ring_Queue_TX *ring_queue_tx);
+void generate_key();
+void pass_key(unsigned char *key, unsigned char *iv, unsigned char *aad);
 
 #if defined(__cplusplus)
 }
